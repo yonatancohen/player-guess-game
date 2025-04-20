@@ -3,7 +3,7 @@
     <div class="flex items-center border border-[#020B57] overflow-hidden relative bg-[#FAFAFA]"
         [ngClass]="{'rounded-xl': !filtered.length, 'rounded-t-xl border-b-0': filtered.length}">
         <div class="flex items-center justify-center w-10 h-10 absolute left-2 rounded-xl">
-            <img alt="bullet" src="/images/bullet.svg" loading="lazy" />
+            <img alt="bullet" src="images/bullet.svg" loading="lazy" />
         </div>
         <input type="text" [formControl]="searchControl" placeholder="מי השחקן?"
             [ngClass]="{'border-b-2 border-blue-800': filtered.length}"
