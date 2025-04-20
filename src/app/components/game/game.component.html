@@ -1,0 +1,28 @@
+<div class="relative w-full min-h-[calc(100vh-62px)] bg-cover bg-center flex flex-col">
+  <div class="p-4 pb-0 max-w-lg mx-auto w-full flex-grow flex flex-col">
+    <app-autocomplete (selected)="onSelected($event)" [players]="playersList"></app-autocomplete>
+
+    <ng-container *ngIf="guessedPlayers?.length">
+      <h3 class="font-bold text-center mt-16 mb-2">כל הניחושים</h3>
+      <ul class="p-5 rounded-xl bg-white/50 min-h-[25vh] max-h-[60vh] md:max-h-[50vh] overflow-auto">
+        <li *ngFor="let player of guessedPlayers; trackBy: trackByPlayer">
+          <div class="w-full">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-black">{{ player.name }}</span>
+              <span class="text-black font-semibold">{{ player.rank }}</span>
+            </div>
+            <div class="w-full bg-[#DEE7FF] rounded-full h-2">
+              <div class="h-2 rounded-full transition-all duration-1000 delay-100" [ngStyle]="{'width': guessedPlayersAnimatedWidths[player.id] + '%', 
+                            'background-color': guessedPlayersAnimatedColors[player.id]}">
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </ng-container>
+
+    <app-game-nav (prev)="onPreviousClicked()" (next)="onNextClicked()" class="mt-auto"></app-game-nav>
+  </div>
+</div>
+
+<app-result-popup *ngIf="showPopup" (closePopup)="showPopup = false"></app-result-popup>

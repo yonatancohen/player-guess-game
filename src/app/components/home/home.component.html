@@ -1,0 +1,24 @@
+<div class="relative w-full min-h-[calc(100vh-62px)] bg-cover bg-center">
+    <app-countdown [targetDate]="'2025-04-03 15:22:00'"></app-countdown>
+
+    <img src="/images/mobile_banner.webp" class="mb-6 sm:hidden -mt-2 mx-auto" alt="Netflix banner" />
+
+    <div class="flex flex-col items-center h-full text-white">
+        <div class="text-center">
+            <img src="/images/shirt.webp" class="w-48 mb-10 mt-30" alt="Shirt with Netflix logo" />
+            <button routerLink="/game"
+                class="bg-blue-800 px-6 py-2 rounded-full text-white font-bold hover:bg-blue-600 cursor-pointer text-lg">
+                התחל משחק
+            </button>
+        </div>
+        <div class="mt-35 cursor-pointer" (click)="toggleInstructions()">
+            כיצד משחקים <span class="transition-all duration-300 ease-in-out inline-block" [ngClass]="{'rotate-180': showInstructions}">↓</span>
+        </div>
+        <div [ngClass]="{'overflow-auto opacity-100 mt-12 sm:mt-18': showInstructions, 'opacity-0': !showInstructions, 'max-h-0': completlyHidden}"
+            class="transition-all duration-800 ease-in-out overflow-hidden max-w-2xl">
+            <app-instructions></app-instructions>
+        </div>
+    </div>
+
+    <img src="/images/desktop_banner.webp" alt="Netflix banner" class="mt-auto fixed bottom-0 hidden sm:block -z-1" />
+</div>

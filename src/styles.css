@@ -1,1 +1,55 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss";
+
+@theme {
+    --color-blue-50: #eaf3ff;
+    --color-blue-100: #d9e8ff;
+    --color-blue-200: #bbd4ff;
+    --color-blue-300: #92b5ff;
+    --color-blue-400: #6689ff;
+    --color-blue-500: #4360ff;
+    --color-blue-600: #2332ff;
+    --color-blue-700: #1722eb;
+    --color-blue-800: #1722c2;
+    --color-blue-900: #1b2594;
+    --color-blue-950: #101456;
+    --color-blue-1000: #11198C;
+
+    --color-red-1000: #D8161C;
+}
+
+app-root {
+    display: contents;
+}
+
+html,
+body {
+    max-height: 100vh;
+    overflow: auto;
+}
+
+@media (max-width: 640px) {
+    body {
+        background: linear-gradient(180deg, rgba(72, 72, 72, 0) 60%, #222222 90%), #222222 url('/images/bg_small.webp') no-repeat;
+        background-position: 0 48px;
+        background-size: 100%;
+    }
+
+}
+
+@media (min-width: 640px) {
+    body {
+        background: linear-gradient(180deg, rgba(72, 72, 72, 0) 60%, #222222 90%), #222222 url('/images/bg.jpg') no-repeat;
+        background-position: 0 48px;
+        background-size: 100%;
+    }
+
+}
+
+
+.netflix-logo svg {
+    color: rgb(229, 9, 20);
+    fill: currentColor;
+    max-width: 20vw;
+}
