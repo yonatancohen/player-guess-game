@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { InstructionsComponent } from '../instructions/instructions.component';
@@ -11,9 +11,15 @@ import { CountdownComponent } from '../countdown/countdown.component';
   styleUrl: './home.component.css',
   templateUrl: './home.component.html',
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   showInstructions = false;
   completlyHidden = true;
+
+  next_player_ts = new Date();
+  
+  ngOnInit(): void {
+    this.next_player_ts.setMinutes(this.next_player_ts.getMinutes() + Math.floor(Math.random() * 120) + 1);
+  }
 
   toggleInstructions() {
     this.showInstructions = !this.showInstructions;
