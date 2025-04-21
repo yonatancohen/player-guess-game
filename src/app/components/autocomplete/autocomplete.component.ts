@@ -1,17 +1,20 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { UIPlayer } from '../../interfaces/player';
 import { DecodeuUriPipe } from '../../pipes/decodeu-uri.pipe';
+import { PlayerService } from '../../services/player.service';
+import { Player } from '../../interfaces/player';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-autocomplete',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DecodeuUriPipe,],
+  imports: [CommonModule, ReactiveFormsModule, DecodeuUriPipe, ScrollingModule],
   templateUrl: './autocomplete.component.html',
+  styleUrl: './autocomplete.component.css',
   animations: [
     trigger('listAnimation', [
       transition(':enter', [
@@ -25,16 +28,20 @@ import { DecodeuUriPipe } from '../../pipes/decodeu-uri.pipe';
   ]
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
-  @Input() players: UIPlayer[] | undefined;
+  players: Player[] | undefined;
   @Output() selected: EventEmitter<any> = new EventEmitter();
 
   searchControl = new FormControl('');
-  filtered: UIPlayer[] = [];
+  filtered: Player[] = [];
 
   private subscription!: Subscription;
 
+  constructor(private playersService: PlayerService) {
+
+  }
+
   ngOnInit(): void {
-    if (!this.players) return;
+    this.playersService.getAllPlayers().subscribe(response => this.players = response);
 
     this.subscription = this.searchControl.valueChanges.pipe(
       debounceTime(300),
@@ -43,11 +50,11 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
       map(searchText => {
         if (!this.players) return [];
         return searchText.length
-          ? this.players.filter(p => !p.selected && p.name.toLowerCase().includes(searchText))
+          ? this.players.filter(p => p.name.toLowerCase().includes(searchText))
           : [];
       })
     ).subscribe(results => {
-      this.filtered = results.sort((a: UIPlayer, b: UIPlayer) => a.name.localeCompare(b.name));
+      this.filtered = results.sort((a: Player, b: Player) => a.name.localeCompare(b.name));
     });
   }
 
@@ -55,14 +62,14 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  select(player: UIPlayer): void {
+  select(player: Player): void {
     this.searchControl.setValue('');
     this.filtered = [];
 
     this.selected.emit(player);
   }
 
-  trackByPlayer(index: number, p: UIPlayer) {
+  trackByPlayer(index: number, p: Player) {
     return p.id;
   }
 }

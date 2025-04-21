@@ -1,0 +1,10 @@
+.cdk-virtual-scroll-viewport {
+    height: 300px;
+    width: 100%;
+    backdrop-filter: blur(5px);
+    /* border: 2px solid rgb(2 11 87 / 22%); */
+}
+
+:host {
+    display: contents;
+}

@@ -1,6 +1,6 @@
 <div class="relative w-full min-h-[calc(100vh-62px)] bg-cover bg-center flex flex-col">
   <div class="p-4 pb-0 max-w-lg mx-auto w-full flex-grow flex flex-col">
-    <app-autocomplete (selected)="onSelected($event)" [players]="playersList"></app-autocomplete>
+    <app-autocomplete (selected)="onSelected($event)"></app-autocomplete>
 
     <ng-container *ngIf="guessedPlayers?.length">
       <h3 class="font-bold text-center mt-16 mb-2">כל הניחושים</h3>

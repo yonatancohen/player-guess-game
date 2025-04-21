@@ -1,6 +1,6 @@
 <div class="relative">
     <!-- Input Field -->
-    <div class="flex items-center border border-[#020B57] overflow-hidden relative bg-[#FAFAFA]"
+    <div class="flex items-center border border-[#020B57] overflow-hidden relative bg-[#FAFAFA57]"
         [ngClass]="{'rounded-xl': !filtered.length, 'rounded-t-xl border-b-0': filtered.length}">
         <div class="flex items-center justify-center w-10 h-10 absolute left-2 rounded-xl">
             <img alt="bullet" src="images/bullet.svg" loading="lazy" />
@@ -12,13 +12,13 @@
 
     <!-- Results -->
     <div *ngIf="filtered.length" @listAnimation
-        class="border border-[#020B57] border-t-0 rounded-b-xl bg-[#FAFAFA] max-h-[300px] overflow-auto absolute w-full z-2">
-        <ul> 
-            <li *ngFor="let p of filtered; let last = last; trackBy: trackByPlayer" (click)="select(p)"
-                class="mx-2 ps-2 py-2 text-right cursor-pointer border-[#E6E6E6] hover:bg-gray-100" [ngClass]="{'border-b': !last}">
+        class="border border-[#020B57] border-t-0 rounded-b-xl bg-[#FAFAFA57] overflow-auto absolute w-full z-2">
+        <cdk-virtual-scroll-viewport itemSize="41">
+            <div *cdkVirtualFor="let p of filtered; let last = last; trackBy: trackByPlayer" (click)="select(p)"
+                class="ps-4 pe-2 py-2 text-right cursor-pointer border-[#E6E6E6] hover:bg-[#FAFAFA94]"
+                [ngClass]="{'border-b': !last}">
                 <span [innerHTML]="p.name | decodeuUri"></span>
-            </li>
-        </ul>
+            </div>
+        </cdk-virtual-scroll-viewport>
     </div>
-
 </div>
