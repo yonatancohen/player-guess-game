@@ -9,7 +9,7 @@
           <div class="w-full">
             <div class="flex justify-between items-center mb-1">
               <span class="text-black">{{ player.name }}</span>
-              <span class="text-black font-semibold">{{ player.rank }}</span>
+              <span class="text-black font-semibold">{{ player.rank | number }}</span>
             </div>
             <div class="w-full bg-[#DEE7FF] rounded-full h-2">
               <div class="h-2 rounded-full transition-all duration-1000 delay-100" [ngStyle]="{'width': guessedPlayersAnimatedWidths[player.id] + '%', 
