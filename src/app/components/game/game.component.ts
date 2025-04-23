@@ -6,11 +6,12 @@ import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
 import { GameNavComponent } from '../game-nav/game-nav.component';
 import { ResultPopupComponent } from '../result-popup/result-popup.component';
 import { GameService } from '../../services/game.service';
+import { DecodeuUriPipe } from '../../pipes/decodeu-uri.pipe';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AutocompleteComponent, GameNavComponent, ResultPopupComponent],
+  imports: [CommonModule, ReactiveFormsModule, AutocompleteComponent, GameNavComponent, ResultPopupComponent, DecodeuUriPipe],
   templateUrl: './game.component.html',
   styleUrl: './game.component.css'
 })
@@ -57,8 +58,10 @@ export class GameComponent implements OnInit {
   onSelected(player: Player) {
     if (this.guessedPlayersIds.includes(player.id)) return;
 
-    const foundGamePlayer = this.playersList.find(p => p.id == player.id);
+    let foundGamePlayer = this.playersList.find(p => p.id == player.id);
     if (!foundGamePlayer) return;
+
+    foundGamePlayer = {...player, ...foundGamePlayer} as UIGamePlayer;
 
     foundGamePlayer.selected = true;
 

@@ -8,7 +8,7 @@
         <li *ngFor="let player of guessedPlayers; trackBy: trackByPlayer">
           <div class="w-full">
             <div class="flex justify-between items-center mb-1">
-              <span class="text-black">{{ player.name }}</span>
+              <span class="text-black">{{ player.name | decodeuUri }}</span>
               <span class="text-black font-semibold">{{ player.rank | number }}</span>
             </div>
             <div class="w-full bg-[#DEE7FF] rounded-full h-2">
