@@ -2,7 +2,7 @@
     display: contents;
 }
 
-ul {
+ul, .hint {
     backdrop-filter: blur(5px);
     border: 2px solid rgb(2 11 87 / 22%);
 }

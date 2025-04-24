@@ -1,7 +1,7 @@
 export interface Player {
   id: number;
   name: string;
-  image?: string;
+  // image?: string;
 }
 
 export interface GamePlayer extends Player {
@@ -13,3 +13,9 @@ export interface UIGamePlayer extends GamePlayer {
   selected: boolean;
 }
 
+export interface Game {
+  id: number;
+  max_rank: number;
+  hint: string;
+  players: Array<Player>;
+}

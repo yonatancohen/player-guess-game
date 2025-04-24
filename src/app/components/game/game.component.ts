@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { GamePlayer, Player, UIGamePlayer } from '../../interfaces/player';
+import { Game, GamePlayer, Player, UIGamePlayer } from '../../interfaces/player';
 import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
 import { GameNavComponent } from '../game-nav/game-nav.component';
 import { ResultPopupComponent } from '../result-popup/result-popup.component';
 import { GameService } from '../../services/game.service';
 import { DecodeuUriPipe } from '../../pipes/decodeu-uri.pipe';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-game',
@@ -23,25 +24,20 @@ export class GameComponent implements OnInit {
   guessedPlayersAnimatedWidths: { [id: number]: number } = {};
   guessedPlayersAnimatedColors: { [id: number]: string } = {};
 
-  playersList: UIGamePlayer[] = [];
+  gameInfo: Game | undefined;
+  gameCompleted: boolean = false;
+  showHint: boolean = false;
 
-  showPopup: boolean = false;;
+  showPopup: boolean = false;
 
   constructor(private gameService: GameService) { }
 
   ngOnInit(): void {
     this.gameService.getGame().subscribe({
-      next: (players: GamePlayer[]) => {
-        this.playersList = players.map(p => {
-          return {
-            ...p,
-            color: this.getColor(0),
-            width: 0,
-            selected: false
-          } as UIGamePlayer
-        })
+      next: (game: Game) => {
+        this.gameInfo = game;
       }
-    })
+    });
   }
 
   private getColor(value: number): string {
@@ -51,19 +47,20 @@ export class GameComponent implements OnInit {
     return '#22C55E';                      // green-500
   }
 
-  get maxRank() {
-    return Math.max(...this.playersList.map(p => p.rank));
-  }
-
-  onSelected(player: Player) {
+  async onSelected(player: Player) {
     if (this.guessedPlayersIds.includes(player.id)) return;
 
-    let foundGamePlayer = this.playersList.find(p => p.id == player.id);
-    if (!foundGamePlayer) return;
+    const rank: number = await lastValueFrom(this.gameService.checkGameAnswer(this.gameInfo!.id, player.id))
+    if (!rank) return;
 
-    foundGamePlayer = {...player, ...foundGamePlayer} as UIGamePlayer;
-
-    foundGamePlayer.selected = true;
+    const foundGamePlayer = {
+      ...player, ...{
+        rank: rank,
+        color: this.getColor(0),
+        width: 0,
+        selected: true
+      }
+    } as UIGamePlayer;
 
     this.guessedPlayersAnimatedWidths[foundGamePlayer.id] = 0;
     this.guessedPlayersAnimatedColors[foundGamePlayer.id] = this.getColor(0);
@@ -72,10 +69,10 @@ export class GameComponent implements OnInit {
     this.guessedPlayersAnimatedWidths[foundGamePlayer.id] = foundGamePlayer.width;
     this.guessedPlayersAnimatedColors[foundGamePlayer.id] = this.getColor(0);
 
-    const progressWidth = ((this.maxRank - (foundGamePlayer.rank - 1)) / this.maxRank) * 100;
+    const progressWidth = ((this.gameInfo!.max_rank - (foundGamePlayer.rank - 1)) / this.gameInfo!.max_rank) * 100;
     setTimeout(() => {
       this.guessedPlayersAnimatedWidths[foundGamePlayer.id] = progressWidth;
-    }, 0);
+    }, 200);
 
     let count = 4;
     const intr = setInterval(() => {
@@ -87,6 +84,11 @@ export class GameComponent implements OnInit {
         clearInterval(intr);
       }
     }, 100);
+
+    if (foundGamePlayer.rank == 1) {
+      alert('done!')
+      this.gameCompleted = true;
+    }
   }
 
   trackByPlayer(index: number, p: UIGamePlayer) {

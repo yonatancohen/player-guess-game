@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -27,9 +27,10 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     ])
   ]
 })
-export class AutocompleteComponent implements OnInit, OnDestroy {
-  players: Player[] | undefined;
+export class AutocompleteComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() players: Player[] | undefined;
   @Output() selected: EventEmitter<any> = new EventEmitter();
+  @Input() gameCompleted: boolean = false;
 
   searchControl = new FormControl('');
   filtered: Player[] = [];
@@ -41,8 +42,6 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.playersService.getAllPlayers().subscribe(response => this.players = response);
-
     this.subscription = this.searchControl.valueChanges.pipe(
       debounceTime(300),
       map(value => (value ? value.toLowerCase().trim() : '')),
@@ -60,6 +59,17 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['gameCompleted']) {
+      if (changes['gameCompleted'].currentValue) {
+        this.searchControl.disable();
+      }
+      else {
+        this.searchControl.enable();
+      }
+    }
   }
 
   select(player: Player): void {

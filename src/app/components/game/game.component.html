@@ -1,6 +1,15 @@
-<div class="relative w-full min-h-[calc(100vh-62px)] bg-cover bg-center flex flex-col">
+<div class="relative w-full min-h-[calc(100vh-62px)] bg-cover bg-center flex flex-col" *ngIf="gameInfo">
   <div class="p-4 pb-0 max-w-lg mx-auto w-full flex-grow flex flex-col">
-    <app-autocomplete (selected)="onSelected($event)"></app-autocomplete>
+    <div class="flex gap-3">
+      <app-autocomplete (selected)="onSelected($event)" [players]="gameInfo!.players"
+        [gameCompleted]="gameCompleted"></app-autocomplete>
+      <button type="button" class="bg-blue-500 hover:bg-blue-700 rounded text-white p-3 cursor-pointer"
+        (click)="showHint = !showHint">רמז</button>
+    </div>
+    <p [ngClass]="{'opacity-100 max-h-40 mt-2': showHint,'opacity-0 max-h-0 overflow-hidden': !showHint}"
+      [innerHTML]="gameInfo!.hint"
+      class="hint transition-all duration-500 ease-in-out mt-2 p-2 bg-white/50 rounded-xl">
+    </p>
 
     <ng-container *ngIf="guessedPlayers?.length">
       <h3 class="font-bold text-center mt-16 mb-2">כל הניחושים</h3>
@@ -21,7 +30,8 @@
       </ul>
     </ng-container>
 
-    <app-game-nav (prev)="onPreviousClicked()" (next)="onNextClicked()" class="mt-auto"></app-game-nav>
+    <app-game-nav (prev)="onPreviousClicked()" (next)="onNextClicked()" class="mt-auto"
+      [gameId]="gameInfo!.id"></app-game-nav>
   </div>
 </div>
 
