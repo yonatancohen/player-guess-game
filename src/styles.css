@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+@import 'ngx-toastr/toastr';
 
 @theme {
     --color-blue-50: #eaf3ff;

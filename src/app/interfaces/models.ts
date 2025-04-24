@@ -19,3 +19,8 @@ export interface Game {
   hint: string;
   players: Array<Player>;
 }
+
+export interface League {
+  id: number;
+  name: string;
+}

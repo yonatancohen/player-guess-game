@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Game, GamePlayer, Player, UIGamePlayer } from '../../interfaces/player';
+import { Game, GamePlayer, Player, UIGamePlayer } from '../../interfaces/models';
 import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
 import { GameNavComponent } from '../game-nav/game-nav.component';
 import { ResultPopupComponent } from '../result-popup/result-popup.component';

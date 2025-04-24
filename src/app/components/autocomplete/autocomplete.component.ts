@@ -6,7 +6,7 @@ import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operato
 import { trigger, transition, style, animate } from '@angular/animations';
 import { DecodeuUriPipe } from '../../pipes/decodeu-uri.pipe';
 import { PlayerService } from '../../services/player.service';
-import { Player } from '../../interfaces/player';
+import { Player } from '../../interfaces/models';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
@@ -31,6 +31,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy, OnChanges {
   @Input() players: Player[] | undefined;
   @Output() selected: EventEmitter<any> = new EventEmitter();
   @Input() gameCompleted: boolean = false;
+  @Input() showSelectedText: boolean = false;
 
   searchControl = new FormControl('');
   filtered: Player[] = [];
@@ -74,6 +75,10 @@ export class AutocompleteComponent implements OnInit, OnDestroy, OnChanges {
 
   select(player: Player): void {
     this.searchControl.setValue('');
+    if (this.showSelectedText) {
+      this.searchControl.setValue(player.name, { emitEvent: false });
+    }
+
     this.filtered = [];
 
     this.selected.emit(player);

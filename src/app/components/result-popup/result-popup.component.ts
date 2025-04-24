@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Player } from '../../interfaces/player';
+import { Player } from '../../interfaces/models';
 
 @Component({
   selector: 'app-result-popup',
