@@ -13,7 +13,7 @@ export class PlayerService {
 
   getPlayersByLeagues(leagueIds: number[]): Observable<Player[]> {
     const params = new HttpParams().set('leagues_id', leagueIds.join(','));
-    return this.http.get<Array<Player>>(`${environment.apiUrl}api/admin/players`, {
+    return this.http.get<Array<Player>>(`${environment.apiUrl}api/players`, {
       params,
       headers: getHeaders() // אם אתה צריך headers מותאמים
     }

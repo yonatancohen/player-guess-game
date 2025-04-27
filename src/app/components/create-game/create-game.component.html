@@ -3,7 +3,6 @@
     <div class="bg-white shadow sm:rounded-lg">
       <div class="px-4 py-5 sm:p-6">
         <h2 class="text-2xl font-bold text-gray-900 mb-6">צור משחק חדש</h2>
-        {{gameForm.value|json}}
         <form (ngSubmit)="onSubmit()" class="space-y-6" [formGroup]="gameForm">
           <div class="flex gap-5 lg:gap-8">
             <div>
@@ -17,7 +16,7 @@
                 <div *ngFor="let league of leagues" class="flex items-center gap-3 cursor-pointer"
                   (click)="$event.stopPropagation(); toggleLeague(league)">
                   <input type="checkbox" [checked]="isSelected(league)"
-                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer">
+                    class="shadow-sm h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer">
                   <label [for]="league.id" class="ml-2 block text-sm text-gray-900 cursor-pointer">
                     {{league.name}}
                   </label>
@@ -45,11 +44,11 @@
                 <div class="flex gap-3">
                   <div class="flex-1">
                     <input type="date" formControlName="gameDate"
-                      class="appearance-none resize-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm">
+                      class="appearance-none resize-none rounded-lg relative block w-full px-3 py-2 shadow-sm border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm">
                   </div>
                   <div class="flex-1">
                     <input type="time" formControlName="gameTime"
-                      class="appearance-none resize-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm">
+                      class="appearance-none resize-none rounded-lg relative block w-full px-3 py-2 shadow-sm border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm">
                   </div>
                 </div>
               </div>
@@ -61,7 +60,7 @@
                   </span>
                 </label>
                 <textarea formControlName="hint"
-                  class="appearance-none resize-none h-25 rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"></textarea>
+                  class="appearance-none resize-none h-25 rounded-lg relative block w-full px-3 py-2 shadow-sm border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"></textarea>
               </div>
             </div>
           </div>

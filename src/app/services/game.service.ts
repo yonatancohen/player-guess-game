@@ -14,10 +14,6 @@ export class GameService {
     return this.http.post<number>(`${environment.apiUrl}api/check-rank`, {game_id, player_id});
   }
 
-  createGame(player_id: number, activate_at: string, leagues: Array<number>, hint: string) {
-    return this.http.post(`${environment.apiUrl}api/game`, { player_id, leagues, activate_at, hint });
-  }
-
   getGame(game_id?: number) {
     let url = `${environment.apiUrl}api/game`;
     if (game_id) {

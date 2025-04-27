@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { DecodeuUriPipe } from '../../pipes/decodeu-uri.pipe';
-import { PlayerService } from '../../services/player.service';
 import { Player } from '../../interfaces/models';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-autocomplete',
@@ -32,30 +32,48 @@ export class AutocompleteComponent implements OnInit, OnDestroy, OnChanges {
   @Output() selected: EventEmitter<any> = new EventEmitter();
   @Input() gameCompleted: boolean = false;
   @Input() showSelectedText: boolean = false;
+  @Input() isSearchMode: boolean = false;
 
   searchControl = new FormControl('');
   filtered: Player[] = [];
 
   private subscription!: Subscription;
 
-  constructor(private playersService: PlayerService) {
+  constructor(private adminService: AdminService) {
 
   }
 
   ngOnInit(): void {
-    this.subscription = this.searchControl.valueChanges.pipe(
-      debounceTime(300),
-      map(value => (value ? value.toLowerCase().trim() : '')),
-      distinctUntilChanged(),
-      map(searchText => {
-        if (!this.players) return [];
-        return searchText.length
-          ? this.players.filter(p => p.name.toLowerCase().includes(searchText))
-          : [];
-      })
-    ).subscribe(results => {
-      this.filtered = results.sort((a: Player, b: Player) => a.name.localeCompare(b.name));
-    });
+    if (!this.isSearchMode) {
+      this.subscription = this.searchControl.valueChanges.pipe(
+        debounceTime(700),
+        map(value => (value ? value.toLowerCase().trim() : '')),
+        distinctUntilChanged(),
+        map(searchText => {
+          if (!this.players) return [];
+          return searchText.length
+            ? this.players.filter(p => p.name.toLowerCase().includes(searchText))
+            : [];
+        })
+      ).subscribe(results => {
+        this.filtered = results.sort((a: Player, b: Player) => a.name.localeCompare(b.name));
+      });
+    }
+    else {
+      this.subscription = this.searchControl.valueChanges.pipe(
+        debounceTime(300),
+        map(value => value ? value.toLowerCase().trim() : ''),
+        distinctUntilChanged(),
+        switchMap(searchText => {
+          if (!searchText.length) {
+            return of([]); // תחזיר מערך ריק אם אין טקסט
+          }
+          return this.adminService.searchPlayers(searchText);
+        })
+      ).subscribe(results => {
+        this.filtered = results.sort((a: Player, b: Player) => a.name.localeCompare(b.name));
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -82,6 +100,11 @@ export class AutocompleteComponent implements OnInit, OnDestroy, OnChanges {
     this.filtered = [];
 
     this.selected.emit(player);
+  }
+
+  resetSelection() {
+    this.searchControl.setValue('');
+    this.selected.emit(null);
   }
 
   trackByPlayer(index: number, p: Player) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
 import { AdminService } from '../../services/admin.service';
@@ -18,6 +18,8 @@ import { ToastrService } from 'ngx-toastr';
   imports: [CommonModule, FormsModule, AutocompleteComponent, ReactiveFormsModule],
 })
 export class CreateGameComponent implements OnInit, OnDestroy {
+  @ViewChild(AutocompleteComponent) autoCompleteComponent!: AutocompleteComponent;
+
   leagues: Array<League> = [];
   players: Array<Player> = [];
 
@@ -64,6 +66,10 @@ export class CreateGameComponent implements OnInit, OnDestroy {
     );
   }
 
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
   isSelected(league: League): boolean {
     return this.selectionMap.has(league.id);
   }
@@ -80,12 +86,8 @@ export class CreateGameComponent implements OnInit, OnDestroy {
     this.gameForm.patchValue({ leagues: selected.map(l => l.id) });
   }
 
-  ngOnDestroy(): void {
-    this.subs.unsubscribe();
-  }
-
   onPlayerSelected(player: Player) {
-    this.gameForm.patchValue({ player: player.id });
+    this.gameForm.patchValue({ player: player?.id });
   }
 
   getFormControlError(controlName: string): string {
@@ -104,7 +106,7 @@ export class CreateGameComponent implements OnInit, OnDestroy {
     if (this.gameForm.valid) {
       this.submitting = true;
       const datetime = new Date(this.gameForm.value.gameDate + ' ' + this.gameForm.value.gameTime).toJSON();
-      this.gameService.createGame(this.gameForm.value.player, datetime, this.gameForm.value.leagues, this.gameForm.value.hint).subscribe({
+      this.adminService.createGame(this.gameForm.value.player, datetime, this.gameForm.value.leagues, this.gameForm.value.hint).subscribe({
         next: () => {
           this.submitting = false;
           this.toastrService.success('המשחק נוצר בהצלחה');
@@ -115,6 +117,8 @@ export class CreateGameComponent implements OnInit, OnDestroy {
           this.gameForm.updateValueAndValidity();
 
           this.selectionMap.clear();
+
+          this.autoCompleteComponent.resetSelection();
         },
         error: () => {
           this.submitting = false;

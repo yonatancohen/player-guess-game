@@ -2,6 +2,7 @@
 
 @import "tailwindcss";
 @import 'ngx-toastr/toastr';
+@import "@ng-select/ng-select/themes/default.theme.css";
 
 @theme {
     --color-blue-50: #eaf3ff;
@@ -53,4 +54,10 @@ body {
     color: rgb(229, 9, 20);
     fill: currentColor;
     max-width: 20vw;
+}
+
+.ng-select.ng-select-single .ng-select-container {
+    height: 38px;
+    font-size: 14px;
+    border-radius: var(--radius-md);
 }
