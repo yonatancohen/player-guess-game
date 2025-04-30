@@ -24,13 +24,12 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.error = '';
     this.authService.login(this.username, this.password).subscribe({
       next: response => {
-        debugger;
         this.router.navigate([`/${environment.adminPath}`]);
       },
       error: () => {
-        debugger;
         this.error = 'Invalid username or password';
       }
     })
