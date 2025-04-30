@@ -38,3 +38,16 @@ export interface FullPlayer {
   shirt_number: number;
   nationality_id: number;
 }
+
+export interface AdminGame {
+  id: number;
+  player_name: string;
+  player_id: number;
+  activate_at: string;
+  hint: string
+}
+export interface AdminGameResponse {
+  game: AdminGame;
+  leagues: Array<League>
+}
+

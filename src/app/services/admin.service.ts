@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Country, FullPlayer, League, Player } from '../interfaces/models';
+import { AdminGame, AdminGameResponse, Country, FullPlayer, League, Player } from '../interfaces/models';
 import { getHeaders } from './headers';
 
 @Injectable({
@@ -24,11 +24,11 @@ export class AdminService {
   }
 
   createGame(player_id: number, activate_at: string, leagues: Array<number>, hint: string) {
-    return this.http.post(`${environment.apiUrl}api/game`, { player_id, leagues, activate_at, hint });
+    return this.http.post(`${environment.apiUrl}api/admin/games`, { player_id, leagues, activate_at, hint });
   }
 
   updateGame(game_id: number, player_id: number, activate_at: string, leagues: Array<number>, hint: string) {
-    return this.http.put(`${environment.apiUrl}api/game/${game_id}`, { player_id, leagues, activate_at, hint });
+    return this.http.put(`${environment.apiUrl}api/admin/games/${game_id}`, { player_id, leagues, activate_at, hint });
   }
 
   searchPlayers(query: string) {
@@ -51,6 +51,25 @@ export class AdminService {
       display_name_he: formData.display_name_he,
       nationality_id: formData.nationality_id
     }, {
+      headers: getHeaders()
+    });
+  }
+
+  searchGame(params: { game_date?: string; player_name?: string }) {
+    return this.http.get<Array<{
+      id: number;
+      player_name: string;
+      activate_at: string;
+      leagues: Array<League>,
+      hint: string;
+    }>>(`${environment.apiUrl}api/admin/games/search`, {
+      headers: getHeaders(),
+      params: new HttpParams({ fromObject: params })
+    });
+  }
+
+  getGame(gameId: number) {
+    return this.http.get<AdminGameResponse>(`${environment.apiUrl}api/admin/games/${gameId}`, {
       headers: getHeaders()
     });
   }

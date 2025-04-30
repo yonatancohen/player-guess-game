@@ -6,35 +6,39 @@ import { AdminService } from '../../services/admin.service';
 import { debounceTime, distinctUntilChanged, lastValueFrom, Observable, of, Subject, Subscription, switchMap } from 'rxjs';
 import { League, Player } from '../../interfaces/models';
 import { PlayerService } from '../../services/player.service';
-import { GameService } from '../../services/game.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+import moment from 'moment';
+import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-create-game',
-  templateUrl: './create-game.component.html',
-  styleUrls: ['./create-game.component.css'],
+  selector: 'app-game-form',
+  templateUrl: './game-form.component.html',
   standalone: true,
   imports: [CommonModule, FormsModule, AutocompleteComponent, ReactiveFormsModule],
 })
-export class CreateGameComponent implements OnInit, OnDestroy {
+export class GameFormComponent implements OnInit, OnDestroy {
   @ViewChild(AutocompleteComponent) autoCompleteComponent!: AutocompleteComponent;
 
   leagues: Array<League> = [];
   players: Array<Player> = [];
-
   gameForm: FormGroup;
   submitting: boolean = false;
+  isEditMode: boolean = false;
 
   private selectedLeagues$ = new Subject<League[]>();
   private subs = new Subscription();
   selectionMap = new Map<number, boolean>();
 
-  constructor(private adminService: AdminService,
+  constructor(
+    private adminService: AdminService,
     private playerService: PlayerService,
-    private gameService: GameService,
     private fb: FormBuilder,
-    private toastrService: ToastrService) {
+    private toastrService: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.gameForm = this.fb.group({
       leagues: [[], Validators.required],
       player: ['', Validators.required],
@@ -63,6 +67,44 @@ export class CreateGameComponent implements OnInit, OnDestroy {
           return this.playerService.getPlayersByLeagues(ids);
         })
       ).subscribe(players => this.players = players)
+    );
+
+    // Check if we're in edit mode
+    const gameId = this.route.snapshot.paramMap.get('id');
+    if (gameId) {
+      this.isEditMode = true;
+      this.loadGameData(parseInt(gameId));
+    }
+  }
+
+  private loadGameData(gameId: number) {
+    this.subs.add(
+      this.adminService.getGame(gameId).subscribe(admin_game => {
+        // Set form values
+        const date = admin_game.game.activate_at.split(' ')[0];
+        const time = new Date(admin_game.game.activate_at).toLocaleTimeString('he-IL', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Asia/Jerusalem'
+        });
+
+        this.gameForm.patchValue({
+          player: admin_game.game.player_id,
+          gameDate: date,
+          gameTime: time,
+          hint: admin_game.game.hint
+        });
+
+        this.autoCompleteComponent.select({id: admin_game.game.player_id, name: admin_game.game.player_name} as Player)
+
+        // Set leagues
+        admin_game.leagues.forEach(league => {
+          const foundLeague = this.leagues.find(l => l.id === league.id);
+          if (foundLeague) {
+            this.toggleLeague(foundLeague);
+          }
+        });
+      })
     );
   }
 
@@ -105,26 +147,47 @@ export class CreateGameComponent implements OnInit, OnDestroy {
 
     if (this.gameForm.valid) {
       this.submitting = true;
-      const datetime = new Date(this.gameForm.value.gameDate + ' ' + this.gameForm.value.gameTime).toJSON();
-      this.adminService.createGame(this.gameForm.value.player, datetime, this.gameForm.value.leagues, this.gameForm.value.hint).subscribe({
+      const datetime = moment(this.gameForm.value.gameDate + ' ' + this.gameForm.value.gameTime).format('YYYY-MM-DD HH:mm:ss');
+
+      const gameId = this.route.snapshot.paramMap.get('id');
+      const request$ = gameId
+        ? this.adminService.updateGame(
+          parseInt(gameId),
+          this.gameForm.value.player,
+          datetime,
+          this.gameForm.value.leagues,
+          this.gameForm.value.hint
+        )
+        : this.adminService.createGame(
+          this.gameForm.value.player,
+          datetime,
+          this.gameForm.value.leagues,
+          this.gameForm.value.hint
+        );
+
+      request$.subscribe({
         next: () => {
           this.submitting = false;
-          this.toastrService.success('המשחק נוצר בהצלחה');
+          this.toastrService.success(this.isEditMode ? 'המשחק עודכן בהצלחה' : 'המשחק נוצר בהצלחה');
 
-          this.gameForm.reset();
-          this.gameForm.markAsPristine();
-          this.gameForm.markAsUntouched();
-          this.gameForm.updateValueAndValidity();
-
-          this.selectionMap.clear();
-
-          this.autoCompleteComponent.resetSelection();
+          if (!this.isEditMode) {
+            this.gameForm.reset();
+            this.gameForm.markAsPristine();
+            this.gameForm.markAsUntouched();
+            this.gameForm.updateValueAndValidity();
+            this.selectionMap.clear();
+            this.autoCompleteComponent.resetSelection();
+          }
         },
         error: () => {
           this.submitting = false;
-          this.toastrService.error('שגיאה בעת יצירת משחק');
+          this.toastrService.error(this.isEditMode ? 'שגיאה בעדכון המשחק' : 'שגיאה בעת יצירת משחק');
         }
       });
     }
+  }
+
+  back() {
+    this.router.navigate([`/${environment.adminPath}games`]);
   }
 } 

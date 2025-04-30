@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -11,18 +12,27 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, FormsModule],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   username: string = '';
   password: string = '';
   error: string = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  ngOnInit(): void {
+    
+  }
+
   onSubmit() {
-    if (this.authService.login(this.username, this.password)) {
-      this.router.navigate(['/admin/create-game']);
-    } else {
-      this.error = 'Invalid username or password';
-    }
+    this.authService.login(this.username, this.password).subscribe({
+      next: response => {
+        debugger;
+        this.router.navigate([`/${environment.adminPath}`]);
+      },
+      error: () => {
+        debugger;
+        this.error = 'Invalid username or password';
+      }
+    })
   }
 } 

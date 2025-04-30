@@ -7,13 +7,15 @@ import { lastValueFrom, Subscription } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
 import { ToastrService } from 'ngx-toastr';
+import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-edit-player',
   templateUrl: './edit-player.component.html',
   styleUrls: ['./edit-player.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, AutocompleteComponent]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, AutocompleteComponent, RouterLink]
 })
 export class EditPlayerComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
@@ -22,7 +24,9 @@ export class EditPlayerComponent implements OnInit, OnDestroy {
 
   countries: Array<Country> = [];
   selectedPlayer: Player | undefined;
-  submitting: boolean = false
+  submitting: boolean = false;
+
+  environment = environment;
 
   playerForm: FormGroup;
 

@@ -1,0 +1,93 @@
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+        <a class="text-blue-600 hover:text-blue-800 transition-colors duration-200 font-medium block mb-3 underline"
+            [routerLink]="['/', environment.adminPath.replace('/', ''), 'edit-player']">עריכת שחקנים</a>
+        <div class="bg-white shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">חיפוש משחקים</h2>
+                    <button (click)="createNewGame()"
+                        class="bg-blue-800 px-4 py-2 rounded-lg text-white font-bold hover:bg-blue-600 cursor-pointer">
+                        צור משחק חדש
+                    </button>
+                </div>
+
+                <div class="flex gap-4 items-end">
+                    <div class="flex-grow">
+                        <label for="date" class="block text-sm font-medium text-gray-700">תאריך</label>
+                        <input type="date" id="date" [(ngModel)]="searchForm.date"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div class="flex-grow">
+                        <label for="playerName" class="block text-sm font-medium text-gray-700">שם שחקן</label>
+                        <input type="text" id="playerName" [(ngModel)]="searchForm.playerName"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <button type="button" (click)="searchGames()"
+                            class="bg-blue-800 px-4 py-1.75 rounded-lg text-white font-bold hover:bg-blue-600 cursor-pointer">
+                            חפש
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        תאריך
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        שחקן
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        רמז
+                                    </th>
+                                    <th scope="col" class="relative px-6 py-3">
+                                        <span class="sr-only">פעולות</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr *ngFor="let game of games" class="hover:bg-gray-50 cursor-pointer"
+                                    (click)="editGame(game.id)">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{game.activate_at | date:'dd/MM/yyyy'}}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{game.player_name}}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">
+                                        {{game.hint}}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900">ערוך</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div *ngIf="searching" class="mt-4 text-center">
+                        <svg class="animate-spin h-5 w-5 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                    </div>
+
+                    <div *ngIf="!searching && games.length === 0" class="mt-4 text-center text-gray-500">
+                        לא נמצאו משחקים
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

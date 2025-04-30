@@ -42,7 +42,7 @@ body {
 
 @media (min-width: 640px) {
     body {
-        background: linear-gradient(180deg, rgba(72, 72, 72, 0) 60%, #222222 90%), #222222 url('https://yonatancohen.github.io/player-guess-game/images/bg.jpg') no-repeat;
+        background: linear-gradient(180deg, rgba(72, 72, 72, 0) 60%, #222222 90%), #222222 url('/images/bg.jpg') no-repeat;
         background-position: 0 48px;
         background-size: 100%;
     }

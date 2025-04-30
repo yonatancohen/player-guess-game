@@ -1,39 +1,40 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { tap, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+interface TokenResponse {
+  access_token: string;
+  token_type: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private isAuthenticated = new BehaviorSubject<boolean>(false);
+  private readonly TOKEN_KEY = 'access_token';
 
-  constructor() {
-    // Check if user is already logged in
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      this.isAuthenticated.next(true);
-    }
+  constructor(private http: HttpClient) { }
+
+  login(username: string, password: string): Observable<void> {
+    return this.http.post<TokenResponse>(`${environment.apiUrl}api/admin/token`, new URLSearchParams({ username, password, }).toString(), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).pipe(
+      tap(resp => {
+        localStorage.setItem(this.TOKEN_KEY, resp.access_token);
+      }),
+      map(() => { })
+    );
   }
 
-  login(username: string, password: string): boolean {
-    if (username === 'sport5' && password === 'guessgame5') {
-      localStorage.setItem('auth_token', 'dummy_token');
-      this.isAuthenticated.next(true);
-      return true;
-    }
-    return false;
+  get isLoggedIn() {
+    return !!localStorage.getItem(this.TOKEN_KEY)
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
   logout(): void {
-    localStorage.removeItem('auth_token');
-    this.isAuthenticated.next(false);
+    localStorage.removeItem(this.TOKEN_KEY);
   }
-
-  isLoggedIn(): Observable<boolean> {
-    return this.isAuthenticated.asObservable();
-  }
-
-  getAuthStatus(): boolean {
-    return this.isAuthenticated.value;
-  }
-} 
+}
