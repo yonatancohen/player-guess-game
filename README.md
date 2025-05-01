@@ -36,6 +36,13 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+
+```bash
+serve -s dist/player-guess-game/browser -l 4200
+```
+
+This will create a server so you can check the production version
+
 ## Running unit tests
 
 To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
