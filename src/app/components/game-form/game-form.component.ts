@@ -95,15 +95,16 @@ export class GameFormComponent implements OnInit, OnDestroy {
           hint: admin_game.game.hint
         });
 
-        this.autoCompleteComponent.select({id: admin_game.game.player_id, name: admin_game.game.player_name} as Player)
+        this.autoCompleteComponent.select({ id: admin_game.game.player_id, name: admin_game.game.player_name } as Player)
 
         // Set leagues
         admin_game.leagues.forEach(league => {
-          const foundLeague = this.leagues.find(l => l.id === league.id);
-          if (foundLeague) {
-            this.toggleLeague(foundLeague);
-          }
+          this.selectionMap.set(league.id, true);
         });
+        const selected = this.leagues.filter(l => this.selectionMap.has(l.id));
+        this.selectedLeagues$.next(selected);
+
+        this.gameForm.patchValue({ leagues: selected.map(l => l.id) });
       })
     );
   }
