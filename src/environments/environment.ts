@@ -1,4 +1,4 @@
 export const environment = {
     adminPath: 'admin/',
-    apiUrl: 'http://127.0.0.1:8000/'
+    apiUrl: 'https://football-api-c9fk.onrender.com/'
 };
