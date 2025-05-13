@@ -32,6 +32,6 @@ export class GameService {
   }
 
   getNextGame() {
-    return this.http.get<string>(`${environment.apiUrl}api/next-game`);
+    return this.http.get(`${environment.apiUrl}api/next-game`, { responseType: 'text' });
   }
 }

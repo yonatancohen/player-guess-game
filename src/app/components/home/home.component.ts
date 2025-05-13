@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { InstructionsComponent } from '../instructions/instructions.component';
 import { CountdownComponent } from '../countdown/countdown.component';
 import { GameService } from '../../services/game.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +32,7 @@ export class HomeComponent implements OnInit {
       next: (value: string) => {
         if (value) {
           this.next_player_ts = new Date(value);
+          debugger;
         }
       }
     })
