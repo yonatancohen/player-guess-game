@@ -11,12 +11,13 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { environment } from '../../../environments/environment';
+import { AdminMenuComponent } from '../admin-menu/admin-menu.component';
 
 @Component({
   selector: 'app-game-form',
   templateUrl: './game-form.component.html',
   standalone: true,
-  imports: [CommonModule, FormsModule, AutocompleteComponent, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, AutocompleteComponent, ReactiveFormsModule, AdminMenuComponent],
 })
 export class GameFormComponent implements OnInit, OnDestroy {
   @ViewChild(AutocompleteComponent) autoCompleteComponent!: AutocompleteComponent;

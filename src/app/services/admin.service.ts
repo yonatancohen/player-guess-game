@@ -55,12 +55,13 @@ export class AdminService {
     });
   }
 
-  searchGame(params: { game_date?: string; player_name?: string }) {
+  searchGame(params: { game_date?: string; player_name?: string , game_number?: string}) {
     return this.http.get<Array<{
       id: number;
       player_name: string;
       activate_at: string;
       leagues: Array<League>,
+      game_number: number,
       hint: string;
     }>>(`${environment.apiUrl}api/admin/games/search`, {
       headers: getHeaders(),

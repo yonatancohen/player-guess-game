@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { InstructionsComponent } from '../instructions/instructions.component';
 import { CountdownComponent } from '../countdown/countdown.component';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-home',
@@ -15,10 +16,24 @@ export class HomeComponent implements OnInit {
   showInstructions = false;
   completlyHidden = true;
 
-  next_player_ts = new Date();
+  next_player_ts: Date | undefined;
+
+  constructor (private gameService: GameService) {
+
+  }
   
   ngOnInit(): void {
-    this.next_player_ts.setMinutes(this.next_player_ts.getMinutes() + Math.floor(Math.random() * 120) + 1);
+    this.setCountr();
+  }
+
+  private async setCountr() {
+    this.gameService.getNextGame().subscribe({
+      next: (value: string) => {
+        if (value) {
+          this.next_player_ts = new Date(value);
+        }
+      }
+    })
   }
 
   toggleInstructions() {

@@ -1,46 +1,61 @@
-<div class="flex items-center justify-between mx-auto bg-white rounded-t-lg px-4 py-2 shadow text-[#020B57] text-sm fixed bottom-0 left-0 w-full md:static md:w-auto">
-    
-    <div class="flex items-center gap-3" (click)="onPrev()">
+<div
+    class="flex items-center justify-between mx-auto bg-white rounded-t-lg px-4 py-2 shadow text-[#020B57] text-sm fixed bottom-0 left-0 w-full md:static md:w-auto">
+    <div class="flex items-center gap-3">
         <!-- First Arrow -->
-        <svg height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M12.9629 9.73163e-08L26.3971 15.2174L12.9629 30.4347L18.5921 30.4348L32.3849 15.1831L18.5921 0L12.9629 9.73163e-08Z"
-                fill="#1722C2" />
-            <path
-                d="M0.66211 0.608765L14.0963 15.8262L0.662109 31.0435L6.29134 31.0435L20.0841 15.7918L6.29134 0.608765L0.66211 0.608765Z"
-                fill="#1722C2" />
-        </svg>
+        <button type="button" class="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" (click)="onFirst()" [disabled]="gameInfo.game_number == 1">
+            <svg height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M12.9629 9.73163e-08L26.3971 15.2174L12.9629 30.4347L18.5921 30.4348L32.3849 15.1831L18.5921 0L12.9629 9.73163e-08Z"
+                    fill="#1722C2" />
+                <path
+                    d="M0.66211 0.608765L14.0963 15.8262L0.662109 31.0435L6.29134 31.0435L20.0841 15.7918L6.29134 0.608765L0.66211 0.608765Z"
+                    fill="#1722C2" />
+            </svg>
+        </button>
         <!-- Previous Arrow -->
-        <svg width="20" height="31" viewBox="0 0 20 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M0.0537113 0.130432L13.4879 15.3478L0.0537109 30.5652L5.68294 30.5652L19.4757 15.3135L5.68294 0.130432L0.0537113 0.130432Z"
-                fill="#1722C2" />
-        </svg>
-        <span class="font-bold ms-3">הקודם</span>
+        <button type="button" class="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" (click)="onPrev()" [disabled]="gameInfo.game_number == 1">
+            <svg width="20" height="31" viewBox="0 0 20 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M0.0537113 0.130432L13.4879 15.3478L0.0537109 30.5652L5.68294 30.5652L19.4757 15.3135L5.68294 0.130432L0.0537113 0.130432Z"
+                    fill="#1722C2" />
+            </svg>
+        </button>
+        <button type="button" class="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" (click)="onPrev()" [disabled]="gameInfo.game_number == 1">
+            <span class="font-bold ms-3">הקודם</span>
+        </button>
     </div>
 
     <!-- Center Text -->
     <div class="font-bold text-xl min-w-[100px] text-center">
-        מס׳ {{gameId}}
+        מס׳ {{gameInfo.game_number}}
     </div>
 
-    
-    <div class="flex items-center gap-3" (click)="onNext()">
-        <span class="font-bold me-3">הבא</span>
+
+    <div class="flex items-center gap-3">
+        <button type="button" class="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" (click)="onNext()"
+            [disabled]="gameInfo.game_number == gameInfo.max_game_number">
+            <span class="font-bold me-3">הבא</span>
+        </button>
         <!-- Last Arrow -->
-        <svg width="21" height="31" viewBox="0 0 21 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M20.3297 30.5652L6.8955 15.3478L20.3297 0.130495L14.7005 0.130432L0.907715 15.3821L14.7005 30.5652H20.3297Z"
-                fill="#1722C2" />
-        </svg>
+        <button type="button" class="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" (click)="onLast()"
+            [disabled]="gameInfo.game_number == gameInfo.max_game_number">
+            <svg width="21" height="31" viewBox="0 0 21 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M20.3297 30.5652L6.8955 15.3478L20.3297 0.130495L14.7005 0.130432L0.907715 15.3821L14.7005 30.5652H20.3297Z"
+                    fill="#1722C2" />
+            </svg>
+        </button>
         <!-- Next Arrow -->
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M19.4219 32L5.98769 16.7826L19.4219 1.56528L13.7926 1.56522L-8.7738e-05 16.8169L13.7926 32L19.4219 32Z"
-                fill="#1722C2" />
-            <path
-                d="M31.7227 31.3913L18.2885 16.1739L31.7227 0.956579L26.0934 0.956518L12.3007 16.2082L26.0934 31.3913L31.7227 31.3913Z"
-                fill="#1722C2" />
-        </svg>
+        <button type="button" class="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" (click)="onNext()"
+            [disabled]="gameInfo.game_number == gameInfo.max_game_number">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M19.4219 32L5.98769 16.7826L19.4219 1.56528L13.7926 1.56522L-8.7738e-05 16.8169L13.7926 32L19.4219 32Z"
+                    fill="#1722C2" />
+                <path
+                    d="M31.7227 31.3913L18.2885 16.1739L31.7227 0.956579L26.0934 0.956518L12.3007 16.2082L26.0934 31.3913L31.7227 31.3913Z"
+                    fill="#1722C2" />
+            </svg>
+        </button>
     </div>
 </div>

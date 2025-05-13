@@ -1,18 +1,16 @@
 <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-3xl mx-auto">
-        <a class="text-blue-600 hover:text-blue-800 transition-colors duration-200 font-medium block mb-3 underline"
-            [routerLink]="['/', environment.adminPath.replace('/', ''), 'edit-player']">עריכת שחקנים</a>
+        <app-admin-menu></app-admin-menu>
         <div class="bg-white shadow sm:rounded-lg">
             <div class="px-4 py-5 sm:p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">חיפוש משחקים</h2>
-                    <button (click)="createNewGame()"
-                        class="bg-blue-800 px-4 py-2 rounded-lg text-white font-bold hover:bg-blue-600 cursor-pointer">
-                        צור משחק חדש
-                    </button>
-                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">רשימת משחקים</h2>
 
                 <div class="flex gap-4 items-end">
+                    <div class="flex-grow" style="max-width: 125px;">
+                        <label for="gameNumber" class="block text-sm font-medium text-gray-700">מספר משחק</label>
+                        <input type="number" min="1" id="gameNumber" [(ngModel)]="searchForm.gameNumber"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
                     <div class="flex-grow">
                         <label for="date" class="block text-sm font-medium text-gray-700">תאריך</label>
                         <input type="date" id="date" [(ngModel)]="searchForm.date"
@@ -23,10 +21,14 @@
                         <input type="text" id="playerName" [(ngModel)]="searchForm.playerName"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     </div>
-                    <div>
+                    <div class="flex gap-1">
                         <button type="button" (click)="searchGames()"
                             class="bg-blue-800 px-4 py-1.75 rounded-lg text-white font-bold hover:bg-blue-600 cursor-pointer">
                             חפש
+                        </button>
+                        <button type="button" (click)="clearFilters(); searchGames()"
+                            class="bg-gray-800 px-4 py-1.75 rounded-lg text-white font-bold hover:bg-gray-600 cursor-pointer">
+                            נקה
                         </button>
                     </div>
                 </div>
@@ -35,6 +37,10 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        מספר משחק
+                                    </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         תאריך
@@ -55,6 +61,9 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr *ngFor="let game of games" class="hover:bg-gray-50 cursor-pointer"
                                     (click)="editGame(game.id)">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ game.game_number}}
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{game.activate_at | date:'dd/MM/yyyy'}}
                                     </td>

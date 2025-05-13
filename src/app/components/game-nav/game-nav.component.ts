@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Game } from '../../interfaces/models';
 
 @Component({
   selector: 'app-game-nav',
@@ -8,15 +9,28 @@ import { CommonModule } from '@angular/common';
   styleUrl: './game-nav.component.css'
 })
 export class GameNavComponent {
-  @Input() gameId?: number;
-  @Output() prev = new EventEmitter<void>();
-  @Output() next = new EventEmitter<void>();
+  @Input() gameInfo!: Game;
+
+  @Output() pageChanged = new EventEmitter<number>();
 
   onPrev() {
-    this.prev.emit();
+    this.pageChanged.emit(this.gameInfo.game_number - 1);
+  }
+
+  onFirst() {
+    this.pageChanged.emit(1);
   }
 
   onNext() {
-    this.next.emit();
+    if (this.gameInfo.game_number + 1 == this.gameInfo.max_game_number) {
+      this.pageChanged.emit(undefined);
+    }
+    else {
+      this.pageChanged.emit(this.gameInfo.game_number + 1);
+    }
+  }
+
+  onLast() {
+    this.pageChanged.emit(undefined);
   }
 }

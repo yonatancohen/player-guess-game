@@ -15,6 +15,8 @@ export interface UIGamePlayer extends GamePlayer {
 
 export interface Game {
   id: number;
+  game_number: number;
+  max_game_number: number;
   max_rank: number;
   hint: string;
   players: Array<Player>;

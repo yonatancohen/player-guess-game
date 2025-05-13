@@ -1,0 +1,22 @@
+<menu class="grid grid-cols-3 gap-4 mx-auto mb-8">
+    <a class="bg-white rounded-2xl shadow-md p-6 text-center font-semibold text-gray-800 hover:bg-blue-100 transition-colors duration-200"
+    routerLinkActive="active-menu"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="['/', environment.adminPath.replace('/', ''), 'game']">
+        🆕 יצירת משחק
+    </a>
+
+    <a class="bg-white rounded-2xl shadow-md p-6 text-center font-semibold text-gray-800 hover:bg-blue-100 transition-colors duration-200"
+    routerLinkActive="active-menu"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="['/', environment.adminPath.replace('/', ''), 'games']">
+        🎯 רשימת משחקים
+    </a>
+
+    <a class="bg-white rounded-2xl shadow-md p-6 text-center font-semibold text-gray-800 hover:bg-blue-100 transition-colors duration-200"
+        routerLinkActive="active-menu"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="['/', environment.adminPath.replace('/', ''), 'edit-player']">
+        🧍 עריכת שחקנים
+    </a>
+</menu>

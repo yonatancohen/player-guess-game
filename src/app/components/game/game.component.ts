@@ -7,7 +7,9 @@ import { GameNavComponent } from '../game-nav/game-nav.component';
 import { ResultPopupComponent } from '../result-popup/result-popup.component';
 import { GameService } from '../../services/game.service';
 import { DecodeuUriPipe } from '../../pipes/decodeu-uri.pipe';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-game',
@@ -30,14 +32,24 @@ export class GameComponent implements OnInit {
 
   showPopup: boolean = false;
 
+  private pageSubject = new BehaviorSubject<number | undefined>(undefined);
+  private currentGameSubject = new ReplaySubject<Game>(1);
+  
+  game$ = this.pageSubject.pipe(
+    switchMap((page) => this.gameService.getGame(page)),
+    tap((game) => {
+      this.currentGameSubject.next(game);
+      this.guessedPlayers = [];
+      this.guessedPlayersIds = [];
+      this.guessedPlayersAnimatedWidths = {};
+      this.guessedPlayersAnimatedColors = {};
+      this.gameCompleted = false;
+    })
+  );
+
   constructor(private gameService: GameService) { }
 
   ngOnInit(): void {
-    this.gameService.getGame().subscribe({
-      next: (game: Game) => {
-        this.gameInfo = game;
-      }
-    });
   }
 
   private getColor(value: number): string {
@@ -50,7 +62,8 @@ export class GameComponent implements OnInit {
   async onSelected(player: Player) {
     if (this.guessedPlayersIds.includes(player.id)) return;
 
-    const rank: number = await lastValueFrom(this.gameService.checkGameAnswer(this.gameInfo!.id, player.id))
+    const currentGame = await firstValueFrom(this.currentGameSubject);
+    const rank: number = await lastValueFrom(this.gameService.checkGameAnswer(currentGame.game_number, player.id))
     if (!rank) return;
 
     const foundGamePlayer = {
@@ -69,7 +82,10 @@ export class GameComponent implements OnInit {
     this.guessedPlayersAnimatedWidths[foundGamePlayer.id] = foundGamePlayer.width;
     this.guessedPlayersAnimatedColors[foundGamePlayer.id] = this.getColor(0);
 
-    const progressWidth = ((this.gameInfo!.max_rank - (foundGamePlayer.rank - 1)) / this.gameInfo!.max_rank) * 100;
+    let progressWidth = ((currentGame.max_rank - (foundGamePlayer.rank - 1)) / currentGame.max_rank) * 100;
+    if (progressWidth !== 100 && progressWidth > 98.5) {
+      progressWidth = 98.5;
+    }
     setTimeout(() => {
       this.guessedPlayersAnimatedWidths[foundGamePlayer.id] = progressWidth;
     }, 200);
@@ -95,11 +111,7 @@ export class GameComponent implements OnInit {
     return p.id;
   }
 
-  onPreviousClicked() {
-
-  }
-
-  onNextClicked() {
-
+  onPageChanged(pageNumber: number) {
+    this.pageSubject.next(pageNumber);
   }
 }

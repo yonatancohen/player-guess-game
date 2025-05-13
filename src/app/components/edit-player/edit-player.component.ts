@@ -9,13 +9,14 @@ import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
 import { ToastrService } from 'ngx-toastr';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { AdminMenuComponent } from '../admin-menu/admin-menu.component';
 
 @Component({
   selector: 'app-edit-player',
   templateUrl: './edit-player.component.html',
   styleUrls: ['./edit-player.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, AutocompleteComponent, RouterLink]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, AutocompleteComponent, AdminMenuComponent]
 })
 export class EditPlayerComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
