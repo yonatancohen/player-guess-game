@@ -32,7 +32,6 @@ export class HomeComponent implements OnInit {
       next: (value: string) => {
         if (value) {
           this.next_player_ts = new Date(value);
-          debugger;
         }
       }
     })

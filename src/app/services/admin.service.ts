@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { AdminGame, AdminGameResponse, Country, FullPlayer, League, Player } from '../interfaces/models';
 import { getHeaders } from './headers';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,14 @@ export class AdminService {
     });
   }
 
+  getPlayersByLeagues(leagueIds: number[]): Observable<Player[]> {
+    const params = new HttpParams().set('leagues_id', leagueIds.join(','));
+    return this.http.get<Array<Player>>(`${environment.apiUrl}api/admin/players-by-leagues`, {
+      params,
+      headers: getHeaders() // אם אתה צריך headers מותאמים
+    });
+  }
+
   getPlayer(player_id: number) {
     return this.http.get<FullPlayer>(`${environment.apiUrl}api/admin/players/${player_id}`, {
       headers: getHeaders()
@@ -55,7 +64,7 @@ export class AdminService {
     });
   }
 
-  searchGame(params: { game_date?: string; player_name?: string , game_number?: string}) {
+  searchGame(params: { game_date?: string; player_name?: string, game_number?: string }) {
     return this.http.get<Array<{
       id: number;
       player_name: string;

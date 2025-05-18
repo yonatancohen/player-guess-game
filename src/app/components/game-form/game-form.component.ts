@@ -5,7 +5,6 @@ import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
 import { AdminService } from '../../services/admin.service';
 import { debounceTime, distinctUntilChanged, lastValueFrom, Observable, of, Subject, Subscription, switchMap } from 'rxjs';
 import { League, Player } from '../../interfaces/models';
-import { PlayerService } from '../../services/player.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,7 +33,6 @@ export class GameFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private adminService: AdminService,
-    private playerService: PlayerService,
     private fb: FormBuilder,
     private toastrService: ToastrService,
     private route: ActivatedRoute,
@@ -65,7 +63,7 @@ export class GameFormComponent implements OnInit, OnDestroy {
           }
 
           const ids = selected.map(l => l.id);
-          return this.playerService.getPlayersByLeagues(ids);
+          return this.adminService.getPlayersByLeagues(ids);
         })
       ).subscribe(players => this.players = players)
     );
@@ -82,7 +80,9 @@ export class GameFormComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.adminService.getGame(gameId).subscribe(admin_game => {
         // Set form values
-        const date = admin_game.game.activate_at.split(' ')[0];
+        const delimitter = admin_game.game.activate_at.includes('T') ? 'T' : ' '
+        const date = admin_game.game.activate_at.split(delimitter)[0];
+
         const time = new Date(admin_game.game.activate_at).toLocaleTimeString('he-IL', {
           hour: '2-digit',
           minute: '2-digit',
@@ -106,6 +106,9 @@ export class GameFormComponent implements OnInit, OnDestroy {
         this.selectedLeagues$.next(selected);
 
         this.gameForm.patchValue({ leagues: selected.map(l => l.id) });
+        setTimeout(() => {
+          this.gameForm.patchValue({ leagues: selected.map(l => l.id) });
+        }, 0);
       })
     );
   }
