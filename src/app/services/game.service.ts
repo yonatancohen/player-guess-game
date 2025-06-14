@@ -2,7 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Game } from '../interfaces/models';
-import { BehaviorSubject, ReplaySubject, firstValueFrom, lastValueFrom } from 'rxjs';
+import { ReplaySubject, firstValueFrom } from 'rxjs';
+import { FirestoreService } from './firestore.service';
+import { AuthClientService } from './auth.client.service';
+import { getClienteaders } from './headers';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +14,21 @@ export class GameService {
 
   private currentGameSubject = new ReplaySubject<Game>(1);
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authClientService: AuthClientService,
+    private firestoreService: FirestoreService
+  ) { }
 
   checkGameAnswer(game_number: number, player_id: number) {
-    return this.http.post<number>(`${environment.apiUrl}api/check-rank`, {game_number, player_id});
+    return this.http.post<number>(`${environment.apiUrl}api/check-rank`, { game_number, player_id });
+  }
+
+  private async setDocTimestamp(game_number: number) {
+    const user = this.authClientService.currentUser();
+    if (user) {
+      await this.firestoreService.setDocTimestamp(game_number, user.uid);
+    }
   }
 
   getGame(game_number?: number) {
@@ -22,7 +36,7 @@ export class GameService {
     if (game_number) {
       url += `?game_number=${game_number}`
     }
-    
+
     return this.http.get<Game>(url);
   }
 
@@ -33,5 +47,13 @@ export class GameService {
 
   getNextGame() {
     return this.http.get(`${environment.apiUrl}api/next-game`, { responseType: 'text' });
+  }
+
+  completeGame(uid: string, game_number: number, guessed_players: string) {
+    return this.http.post<number>(`${environment.apiUrl}api/complete-game`, { 
+      game_number, guessed_players 
+    }, {
+      headers: getClienteaders(uid)
+    });
   }
 }

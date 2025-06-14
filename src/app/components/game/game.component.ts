@@ -11,6 +11,7 @@ import { lastValueFrom, firstValueFrom } from 'rxjs';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { AuthClientService } from '../../services/auth.client.service';
+import { FirestoreService } from '../../services/firestore.service';
 
 @Component({
   selector: 'app-game',
@@ -27,7 +28,6 @@ export class GameComponent implements OnInit {
   guessedPlayersAnimatedWidths: { [id: number]: number } = {};
   guessedPlayersAnimatedColors: { [id: number]: string } = {};
 
-  gameInfo: Game | undefined;
   gameCompleted: boolean = false;
   showHint: boolean = false;
 
@@ -37,7 +37,7 @@ export class GameComponent implements OnInit {
   private currentGameSubject = new ReplaySubject<Game>(1);
 
   isLoggedIn = computed(() => !!this.auth.isLoggedIn);
-  
+
   game$ = this.pageSubject.pipe(
     switchMap((page) => this.gameService.getGame(page)),
     tap((game) => {
@@ -50,10 +50,13 @@ export class GameComponent implements OnInit {
     })
   );
 
-  constructor(public auth: AuthClientService, private gameService: GameService) { }
+  constructor(
+    public auth: AuthClientService,
+    private gameService: GameService,
+    private firestoreService: FirestoreService) { }
 
   ngOnInit(): void {
-  
+
   }
 
   private getColor(value: number): string {
@@ -78,6 +81,12 @@ export class GameComponent implements OnInit {
         selected: true
       }
     } as UIGamePlayer;
+
+    if (currentGame && this.auth.currentUser()) {
+      if (currentGame.game_number == currentGame.max_game_number) {
+        this.firestoreService.setDocTimestamp(currentGame.game_number, this.auth.currentUser()!.uid);
+      }
+    }
 
     this.guessedPlayersAnimatedWidths[foundGamePlayer.id] = 0;
     this.guessedPlayersAnimatedColors[foundGamePlayer.id] = this.getColor(0);
@@ -106,8 +115,26 @@ export class GameComponent implements OnInit {
     }, 100);
 
     if (foundGamePlayer.rank == 1) {
-      alert('done!')
-      this.gameCompleted = true;
+      if (currentGame && this.auth.currentUser()) {
+        const players = this.guessedPlayers.reverse().map((player, index) => {
+          return {
+            id: player.id,
+            name: player.name,
+            rank: player.rank,
+            guess_order: index + 1
+          }
+        });
+
+        this.gameService.completeGame(this.auth.currentUser()!.uid, currentGame.game_number, JSON.stringify(players)).subscribe({
+          next: (response) => {
+            this.gameCompleted = true;
+            alert('done!')
+          },
+          error: (error) => {
+            debugger;
+          }
+        });
+      }
     }
   }
 

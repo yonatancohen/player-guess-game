@@ -9,6 +9,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { AuthInterceptor } from './interceptors/auth.interceptor.service';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { AuthClientService } from './services/auth.client.service';
 
@@ -36,6 +37,7 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
     {
       provide: APP_INITIALIZER,
       useFactory: initAuth,
