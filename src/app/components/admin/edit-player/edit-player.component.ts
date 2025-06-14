@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Country, Player } from '../../interfaces/models';
-import { AdminService } from '../../services/admin.service';
+import { Country, Player } from '../../../interfaces/models';
+import { AdminService } from '../../../services/admin.service';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
+import { AutocompleteComponent } from "../../autocomplete/autocomplete.component";
 import { ToastrService } from 'ngx-toastr';
 import { RouterLink } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { AdminMenuComponent } from '../admin-menu/admin-menu.component';
 
 @Component({

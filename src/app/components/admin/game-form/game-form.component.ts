@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
-import { AdminService } from '../../services/admin.service';
+import { AutocompleteComponent } from "../../autocomplete/autocomplete.component";
+import { AdminService } from '../../../services/admin.service';
 import { debounceTime, distinctUntilChanged, lastValueFrom, Observable, of, Subject, Subscription, switchMap } from 'rxjs';
-import { League, Player } from '../../interfaces/models';
+import { League, Player } from '../../../interfaces/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { AdminMenuComponent } from '../admin-menu/admin-menu.component';
 
 @Component({

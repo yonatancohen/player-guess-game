@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -12,6 +12,7 @@ interface TokenResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'access_token';
+  private isLoggedInSignal = signal<boolean>(!!localStorage.getItem(this.TOKEN_KEY));
 
   constructor(private http: HttpClient) { }
 
@@ -21,6 +22,7 @@ export class AuthService {
     }).pipe(
       tap(resp => {
         localStorage.setItem(this.TOKEN_KEY, resp.access_token);
+        this.isLoggedInSignal.set(true);
       }),
       map(() => { })
     );
@@ -36,5 +38,6 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    this.isLoggedInSignal.set(false);
   }
 }

@@ -1,0 +1,64 @@
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <h2 class="mt-2 text-center text-3xl font-extrabold text-gray-900">
+                התחברות
+            </h2>
+        </div>
+        <form *ngIf="form" [formGroup]="form" (ngSubmit)="login()">
+            <section class="flex flex-col gap-2">
+                <div>
+                    <label for="email" class="sr-only">אימייל</label>
+                    <input id="email" formControlName="email" placeholder="אימייל" type="email"
+                        class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-white/20 backdrop-blur-md" />
+                    <span class="text-red-500 text-xs block mt-1">
+                        {{ form.touched && form.controls['email'].errors?.['required'] ? 'שדה חובה' : '' }}
+                        {{ form.touched && form.controls['email'].errors?.['email'] ? 'כתובת אימייל לא תקינה' : '' }}
+                        {{ form.touched && form.controls['email'].errors?.['notFound'] ? 'כתובת אימייל לא קיימת' : '' }}
+                    </span>
+                </div>
+
+                <div>
+                    <label for="password" class="sr-only">סיסמה</label>
+                    <input id="password" formControlName="password" placeholder="סיסמה" type="password"
+                        autocomplete="off" minlength="6"
+                        class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-white/20 backdrop-blur-md" />
+                    <span class="text-red-500 text-xs block mt-1">
+                        {{ form.touched && form.controls['password'].errors?.['required'] ? 'שדה חובה' : '' }}
+                        {{ form.touched && form.controls['password'].errors?.['wrongPassword'] ? 'סיסמה שגויה' : '' }}
+                    </span>
+                </div>
+            </section>
+
+            <div class="mt-6">
+                <button type="button" type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    התחברות
+                </button>
+            </div>
+
+            <div class="mt-6">
+                <div class="relative flex items-center justify-center my-4">
+                    <span
+                        class="px-4 text-white text-sm relative before:content-[''] before:absolute before:right-full before:top-1/2 before:w-24 before:h-[1px] before:bg-gray-300 after:content-[''] after:absolute after:left-full after:top-1/2 after:w-24 after:h-[1px] after:bg-gray-300">או
+                        התחבר באמצעות</span>
+                </div>
+
+                <div class="mt-6">
+                    <button type="button" (click)="loginWithGoogle()"
+                        class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z" />
+                        </svg>
+                        <span class="mr-2">Google</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <a routerLink="/register" class="text-white underline block  text-sm text-center">הירשם</a>
+            </div>
+        </form>
+    </div>
+</div>

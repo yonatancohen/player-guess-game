@@ -1,0 +1,139 @@
+<div class="min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div>
+      <h2 class="mt-2 text-center text-3xl font-extrabold text-gray-900">
+        הרשמה
+      </h2>
+    </div>
+
+    <form *ngIf="form" [formGroup]="form">
+      <section class="flex flex-col gap-2">
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label for="firstName" class="sr-only">שם פרטי</label>
+            <input id="firstName" formControlName="firstName" placeholder="שם פרטי" type="text"
+              class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-white/20 backdrop-blur-md" />
+            <span class="text-xs block mt-1">&nbsp;</span>
+          </div>
+
+          <div class="flex-1">
+            <label for="lastName" class="sr-only">שם משפחה</label>
+            <input id="lastName" formControlName="lastName" placeholder="שם משפחה" type="text"
+              class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-white/20 backdrop-blur-md" />
+            <span class="text-xs block mt-1">&nbsp;</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="email" class="sr-only">אימייל</label>
+          <input id="email" formControlName="email" placeholder="אימייל" type="email"
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-white/20 backdrop-blur-md" />
+          <span class="text-red-500 text-xs block mt-1">
+            {{ form.touched && form.controls['email'].errors?.['required'] ? 'שדה חובה' : '' }}
+            {{ form.touched && form.controls['email'].errors?.['email'] ? 'כתובת אימייל לא תקינה' : '' }}
+            {{ form.touched && form.controls['email'].errors?.['emailInUse'] ? 'כתובת אימייל כבר בשימוש' : '' }}
+          </span>
+        </div>
+
+        <div>
+          <label for="phone" class="sr-only">טלפון</label>
+          <input id="phone" formControlName="phone" placeholder="טלפון" type="tel" dir="rtl" autoHyphenPhone
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-white/20 backdrop-blur-md" />
+          <span class="text-red-500 text-xs block mt-1">
+            {{ form.touched && form.controls['phone'].errors?.['invalidPhone'] ? 'מספר טלפון לא חוקי' : '' }}&nbsp;
+          </span>
+        </div>
+
+        <div>
+          <label for="password" class="sr-only">סיסמה</label>
+          <input id="password" formControlName="password" placeholder="סיסמה" type="password" autocomplete="off"
+            minlength="6"
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-white/20 backdrop-blur-md" />
+          <span class="text-red-500 text-xs block mt-1">
+            {{ form.touched && form.controls['password'].errors?.['required'] ? 'שדה חובה' : '' }}
+            {{ form.touched && form.controls['password'].errors?.['minlength'] ? 'סיסמה צריכה להיות לפחות 6 תווים' : ''
+            }}
+            {{ form.touched && form.controls['password'].errors?.['weakPassword'] ? 'הסיסמה חלשה מדי' : '' }}
+          </span>
+        </div>
+
+        <div class="flex items-center">
+          <input id="agree" formControlName="agree" type="checkbox"
+            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+          <label for="agree" class="mr-2 block text-sm text-gray-900">
+            אני מסכים לתנאי השימוש
+          </label>
+        </div>
+
+        <div class="mt-6">
+          <button type="button" (click)="registerWithEmail()"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            הרשמה עם אימייל וסיסמה
+          </button>
+        </div>
+      </section>
+
+      <div id="recaptcha-container"></div>
+
+      <div class="mt-6">
+        <div class="relative flex items-center justify-center my-4">
+          <span
+            class="px-4 text-white text-sm relative before:content-[''] before:absolute before:right-full before:top-1/2 before:w-24 before:h-[1px] before:bg-gray-300 after:content-[''] after:absolute after:left-full after:top-1/2 after:w-24 after:h-[1px] after:bg-gray-300">או
+            התחבר באמצעות</span>
+        </div>
+
+        <div class="mt-6">
+          <button type="button" (click)="loginWithGoogle()"
+            class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+            <svg class="w-5 h-5" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z" />
+            </svg>
+            <span class="mr-2">Google</span>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="mt-8">
+      <a routerLink="/login" class="text-white underline block  text-sm text-center">התחבר</a>
+    </div>
+  </div>
+
+  <!-- OTP Popup -->
+  <div *ngIf="showOtpPopup" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg p-6 max-w-sm w-full">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-medium text-gray-900">אימות מספר טלפון</h3>
+        <button type="button" (click)="closeOtpPopup()" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+          <span class="sr-only">סגור</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <p class="text-sm text-gray-500 mb-4">הקוד נשלח למספר הטלפון שלך</p>
+
+      <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+        <div class="mb-4">
+          <label for="otp" class="sr-only">קוד אימות</label>
+          <input id="otp" formControlName="otp" placeholder="הזן קוד אימות" type="text"
+            class="appearance-none text-center w-auto rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" />
+        </div>
+
+        <p *ngIf="otpError" class="text-sm text-red-600 mb-3 text-center">{{ otpError }}</p>
+
+        <button type="button" (click)="sendOTP()" [disabled]="resendTimeout > 0"
+          class="mb-3 w-full text-center text-sm text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-blue-600">
+          {{ resendTimeout > 0 ? 'שלח קוד חדש (' + resendTimeout + ')' : 'שלח קוד חדש' }}
+        </button>
+
+        <button type="submit" [disabled]="!verificationId || isVerifying"
+          class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
+          {{ isVerifying ? 'מאמת...' : 'אשר קוד' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

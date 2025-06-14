@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { LogoutComponent } from './components/logout/logout.component';
+import { LogoutComponent } from './components/admin/logout/logout.component';
 import { environment } from '../environments/environment';
 import { CommonModule } from '@angular/common';
 

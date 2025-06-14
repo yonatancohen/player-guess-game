@@ -1,0 +1,12 @@
+.ng-invalid.ng-touched {
+    color: var(--color-red-500);
+    border-color: var(--color-red-500);
+}
+
+.ng-invalid.ng-touched::placeholder {
+    color: var(--color-red-500);
+}
+
+input[type="checkbox"].ng-invalid.ng-touched + label {
+    color: var(--color-red-500);   
+}

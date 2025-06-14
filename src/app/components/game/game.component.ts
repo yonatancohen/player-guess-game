@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Game, GamePlayer, Player, UIGamePlayer } from '../../interfaces/models';
@@ -10,6 +10,7 @@ import { DecodeuUriPipe } from '../../pipes/decodeu-uri.pipe';
 import { lastValueFrom, firstValueFrom } from 'rxjs';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { AuthClientService } from '../../services/auth.client.service';
 
 @Component({
   selector: 'app-game',
@@ -34,6 +35,8 @@ export class GameComponent implements OnInit {
 
   private pageSubject = new BehaviorSubject<number | undefined>(undefined);
   private currentGameSubject = new ReplaySubject<Game>(1);
+
+  isLoggedIn = computed(() => !!this.auth.isLoggedIn);
   
   game$ = this.pageSubject.pipe(
     switchMap((page) => this.gameService.getGame(page)),
@@ -47,9 +50,10 @@ export class GameComponent implements OnInit {
     })
   );
 
-  constructor(private gameService: GameService) { }
+  constructor(public auth: AuthClientService, private gameService: GameService) { }
 
   ngOnInit(): void {
+  
   }
 
   private getColor(value: number): string {
