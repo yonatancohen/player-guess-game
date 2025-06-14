@@ -7,3 +7,10 @@ export function getHeaders(): HttpHeaders {
         'Authorization': `Bearer ${token}`
     });
 }
+
+export function getClienteaders(uid: string): HttpHeaders {
+    return new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `UID ${uid}`
+    });
+}

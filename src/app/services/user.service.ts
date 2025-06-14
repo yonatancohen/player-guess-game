@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { getClienteaders } from './headers';
 
 export interface UserProfile {
   uid: string;
@@ -19,5 +20,11 @@ export class UserService {
 
   createProfile(profile: UserProfile): Observable<UserProfile> {
     return this.http.post<UserProfile>(`${environment.apiUrl}api/create-profile`, profile);
+  }
+
+  getProflile(uid: string) {
+    return this.http.get<boolean>(`${environment.apiUrl}api/has-profile`, {
+      headers: getClienteaders(uid)
+    });
   }
 } 
